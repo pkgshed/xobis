@@ -1,0 +1,39 @@
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - govet
+    - staticcheck
+    - unused
+    - errcheck
+    - errorlint
+    - testifylint
+  settings:
+    errorlint:
+      # Cursor follows the byte-reader convention: only bare io.EOF terminates
+      # input; other errors retain their identity through CursorError.
+      allowed-errors:
+        - err: io.EOF
+          fun: "(github.com/pkgshed/xobis.Cursor).PeekByte"
+        - err: io.EOF
+          fun: "(github.com/pkgshed/xobis.Cursor).ReadByte"
+    testifylint:
+      disable:
+        # Use require for prerequisites and assert for independent outcomes.
+        - require-error
+        # Serialization tests intentionally verify the exact encoded text.
+        - encoded-compare
+  exclusions:
+    # Keep generated sources in scope, as standalone go vet did.
+    generated: disable
+    presets: []
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
