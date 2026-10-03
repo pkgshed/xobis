@@ -46,6 +46,21 @@ fmt.Println(code)    // 1-0:1.8.0*255
 fmt.Println(changed) // 1-0:1.8.1*255
 ```
 
+### Net active power
+
+The following electricity quantity constants identify signed net active power, defined as import minus export:
+
+| Quantity constant            | Group C | Scope      |
+|------------------------------|---------|------------|
+| `ElectricityActivePowerNet`   | 16      | All phases |
+| `ElectricityL1ActivePowerNet` | 36      | L1         |
+| `ElectricityL2ActivePowerNet` | 56      | L2         |
+| `ElectricityL3ActivePowerNet` | 76      | L3         |
+
+These definitions come from [DLMS UA Blue Book edition 7, Table 9](https://www.cs.ru.nl/~marko/onderwijs/bss/SmartMeter/Excerpt_BB7.pdf#page=48). Group D selects the processing: `ElectricityInstantaneous` (7) gives instantaneous power; `ElectricityTimeIntegral1` (8) gives an energy integral. For example, `1-0:36.7.0*255` identifies L1 net active power, while `1-0:36.8.0*255` identifies its time integral.
+
+Quantity constants describe group C for electricity objects. They do not assign units, convert readings, or verify device support.
+
 ## Parsing and matching
 
 `Parse` requires all six groups and accepts the `A-B:C.D.E*F` and `A.B.C.D.E.F` notation:

@@ -76,12 +76,21 @@ const (
 	ElectricityVoltage             Quantity = 12
 	ElectricityPowerFactor         Quantity = 13
 	ElectricityFrequency           Quantity = 14
-	ElectricityL1Current           Quantity = 31
-	ElectricityL1Voltage           Quantity = 32
-	ElectricityL2Current           Quantity = 51
-	ElectricityL2Voltage           Quantity = 52
-	ElectricityL3Current           Quantity = 71
-	ElectricityL3Voltage           Quantity = 72
+	// ElectricityActivePowerNet is signed active power across all phases,
+	// defined as import minus export.
+	ElectricityActivePowerNet Quantity = 16
+	ElectricityL1Current      Quantity = 31
+	ElectricityL1Voltage      Quantity = 32
+	// ElectricityL1ActivePowerNet is signed L1 active power, import minus export.
+	ElectricityL1ActivePowerNet Quantity = 36
+	ElectricityL2Current        Quantity = 51
+	ElectricityL2Voltage        Quantity = 52
+	// ElectricityL2ActivePowerNet is signed L2 active power, import minus export.
+	ElectricityL2ActivePowerNet Quantity = 56
+	ElectricityL3Current        Quantity = 71
+	ElectricityL3Voltage        Quantity = 72
+	// ElectricityL3ActivePowerNet is signed L3 active power, import minus export.
+	ElectricityL3ActivePowerNet Quantity = 76
 )
 
 // Processing identifies the processing or classification in group D.
