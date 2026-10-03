@@ -1,0 +1,96 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'tools/docs/**'
+      - '.github/workflows/docs.yml'
+      - 'justfile'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Serialize the complete build and deployment across main and tag events.
+# Each production run checks out current main and discovers the highest tag.
+concurrency:
+  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.ref || 'main' }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tools/docs/go.mod
+          cache-dependency-path: tools/docs/go.sum
+
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.22'
+          enable-cache: true
+          cache-dependency-glob: tools/docs/uv.lock
+
+      - name: Install locked Python tooling
+        run: uv sync --project tools/docs --locked
+
+      - name: Check documentation tooling
+        run: |
+          uv run --project tools/docs --locked ruff check tools/docs
+          uv run --project tools/docs --locked ruff format --check tools/docs
+          uv run --project tools/docs --locked ty check --project tools/docs
+
+      - name: Build pinned Hugo
+        run: go -C tools/docs tool hugo version
+
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Test documentation tooling
+        run: uv run --project tools/docs --locked python -m unittest discover -s tools/docs -p '*_test.py'
+
+      - name: Build and check documentation
+        env:
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          base_url="${PAGES_BASE_URL:-https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/}"
+          uv run --project tools/docs --locked python tools/docs/build.py build --base-url "$base_url"
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: public
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

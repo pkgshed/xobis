@@ -1,3 +1,8 @@
+---
+title: Validation and scope
+weight: 60
+---
+
 # Validation and scope
 
 Identifier validation checks syntax, required groups, and numeric ranges: A is 0..15 and B through F are 0..255. See [values and patterns](values-and-patterns.md) for decimal notation, [encoding](encoding.md) for binary and hexadecimal forms, and [meter readings](readings.md) for values and units.

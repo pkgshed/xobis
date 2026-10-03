@@ -1,3 +1,8 @@
+---
+title: Encoding and decoding
+weight: 40
+---
+
 # Encoding and decoding
 
 ## Text marshalling

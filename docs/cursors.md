@@ -1,3 +1,8 @@
+---
+title: Parser composition
+weight: 30
+---
+
 # Parser composition
 
 Use `ParsePatternFrom` or `ParseReadingFrom` to parse one value from a stream or an enclosing parser. Use `ParsePattern` or `ParseReading` for a complete string.

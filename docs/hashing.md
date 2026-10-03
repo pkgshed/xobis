@@ -1,3 +1,8 @@
+---
+title: Hashing
+weight: 50
+---
+
 # Hashing
 
 For collections that accept [`maphash.Hasher`](https://pkg.go.dev/hash/maphash@go1.27.0#Hasher) (Go 1.27+):

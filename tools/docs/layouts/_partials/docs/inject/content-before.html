@@ -1,0 +1,14 @@
+<div class="docs-version" role="note">
+  <strong>{{ .Site.Params.DocsVersion }}</strong>
+  {{ if .Site.Params.DocsPreview }}
+    <span>Local preview of development documentation.</span>
+  {{ else if eq .Site.Params.DocsVersion "Development" }}
+    {{ if .Site.Params.DocsLatestTag }}
+      <span>Unreleased documentation from main.</span>
+    {{ else }}
+      <span>No release yet. Documentation from main.</span>
+    {{ end }}
+  {{ else }}
+    <span>Documentation from this release tag.</span>
+  {{ end }}
+</div>

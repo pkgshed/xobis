@@ -1,0 +1,15 @@
+{{- $url := urls.Parse .Destination -}}
+{{- $destination := .Destination -}}
+{{- $homeLink := false -}}
+{{- with .Page.File -}}
+  {{- $homeLink = and (not $url.IsAbs) (not $url.Host) (eq (path.Join .Dir $url.Path) "index.md") -}}
+{{- end -}}
+{{- if $homeLink -}}
+  {{- $destination = .Page.Site.Home.RelPermalink -}}
+  {{- with $url.RawQuery -}}{{- $destination = printf "%s?%s" $destination . -}}{{- end -}}
+  {{- with $url.Fragment -}}{{- $destination = printf "%s#%s" $destination . -}}{{- end -}}
+{{- else -}}
+  {{- $destination = partial "docs/links/portable-link" . -}}
+{{- end -}}
+<a href="{{ $destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- /* Keep source links to index.md working after mounting it as _index.md. */ -}}

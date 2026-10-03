@@ -1,0 +1,9 @@
+<nav class="docs-versions" aria-label="Documentation version">
+  <ul>
+    <li><a href="{{ .Site.Home.RelPermalink }}">Documentation</a></li>
+    <li><a href="{{ .Site.Params.DocsMainURL }}">Development (main)</a></li>
+    {{ with .Site.Params.DocsLatestTag }}
+      <li><a href="{{ $.Site.Params.DocsBaseURL }}latest/">Latest release ({{ . }})</a></li>
+    {{ end }}
+  </ul>
+</nav>

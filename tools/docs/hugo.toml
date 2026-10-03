@@ -1,0 +1,24 @@
+title = 'xobis'
+locale = 'en'
+disableKinds = ['taxonomy', 'term', 'RSS']
+
+[module]
+  proxy = 'https://proxy.golang.org,direct'
+  private = 'none'
+  [[module.imports]]
+    path = 'github.com/alex-shpak/hugo-book'
+
+[params]
+  BookSection = '/'
+  BookTheme = 'auto'
+  BookSearch = true
+  BookComments = false
+  BookPortableLinks = 'error'
+  BookServiceWorker = false
+
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 3
+
+[markup.highlight]
+  style = 'github'

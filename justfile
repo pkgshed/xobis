@@ -60,6 +60,29 @@ generate:
 bench *args:
     go test -run '^$' -bench . -benchmem "$@" ./...
 
+# Build main and the latest stable tag, and check the rendered documentation.
+docs-build *args:
+    uv run --project tools/docs --locked python tools/docs/build.py build "$@"
+
+# Preview documentation with live reload at http://localhost:1313/.
+docs-serve *args:
+    uv run --project tools/docs --locked python tools/docs/build.py serve "$@"
+
+# Test documentation version selection, release snapshots, and link checks.
+docs-test:
+    uv run --project tools/docs --locked python -m unittest discover -s tools/docs -p '*_test.py'
+
+# Check documentation tooling for lint, formatting, and type errors.
+docs-quality:
+    uv run --project tools/docs --locked ruff check tools/docs
+    uv run --project tools/docs --locked ruff format --check tools/docs
+    uv run --project tools/docs --locked ty check --project tools/docs
+
+# Sort imports and format documentation tooling.
+docs-fmt:
+    uv run --project tools/docs --locked ruff check --select I --fix tools/docs
+    uv run --project tools/docs --locked ruff format tools/docs
+
 # Fuzz one named target for the given duration with the given worker count.
 fuzz target='FuzzParse' duration='30s' parallel='4':
     go test -run '^$' -fuzz "^${1}$" -fuzztime "$2" -parallel "$3" .

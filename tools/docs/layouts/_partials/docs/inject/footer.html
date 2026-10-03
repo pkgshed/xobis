@@ -1,0 +1,5 @@
+{{ with .File }}
+  {{ $path := .Path }}
+  {{ if eq $path "_index.md" }}{{ $path = "index.md" }}{{ end }}
+  <p><a href="https://github.com/pkgshed/xobis/blob/{{ $.Site.Params.DocsRef }}/docs/{{ $path }}">View source on GitHub</a></p>
+{{ end }}

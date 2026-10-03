@@ -1,0 +1,6 @@
+/public/
+**/__pycache__/
+/tools/docs/resources/
+/tools/docs/.hugo_build.lock
+/tools/docs/.venv/
+/tools/docs/.ruff_cache/

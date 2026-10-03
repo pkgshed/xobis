@@ -37,4 +37,4 @@ func main() {
 
 Validation checks syntax and numeric ranges. It does not verify that an identifier is assigned by a standard or supported by a device.
 
-[Read the documentation](docs/index.md).
+[Read the documentation](https://pkgshed.github.io/xobis/) or [browse the Markdown sources](docs/index.md).

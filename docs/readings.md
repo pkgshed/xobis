@@ -1,3 +1,8 @@
+---
+title: Meter readings
+weight: 20
+---
+
 # Meter readings
 
 `ParseReading` accepts one numeric reading with an optional unit:

@@ -1,3 +1,8 @@
+---
+title: Values and patterns
+weight: 10
+---
+
 # Values and patterns
 
 ## Typed construction
