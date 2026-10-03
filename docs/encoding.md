@@ -84,4 +84,4 @@ if err != nil {
 fmt.Println(restored == code) // true
 ```
 
-Hexadecimal, byte, and integer formats represent complete codes. For a pattern, use `CompleteCode()` when all groups are present, or text marshaling to preserve omissions. To construct a pattern from a code, pass `code.Groups()` and the desired presence flags to [`NewPattern`](values-and-patterns.md#parsing-and-matching).
+Hexadecimal, byte, and integer formats represent complete codes. For a pattern, use `CompleteCode()` when all groups are present, or text marshaling to preserve omissions. Use `code.Pattern()` to convert a code to a pattern with all six groups present. To omit selected groups instead, pass `code.Groups()` and the desired presence flags to [`NewPattern`](values-and-patterns.md#parsing-and-matching).

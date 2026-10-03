@@ -94,6 +94,8 @@ Equality compares group values and, for patterns, presence flags. An omitted gro
 
 `pattern.CompleteCode()` requires all six groups to be present. Otherwise, it returns the zero `Code` and an error wrapping `ErrSyntax`.
 
+The reverse conversion is `code.Pattern()`. It always returns a valid pattern with all six groups present, preserving every value as an explicit constraint. This includes the zero `Code`, which becomes the complete pattern `0-0:0.0.0*0`.
+
 ## Comparing patterns
 
 Use `filter.Covers(identifier)` when every possible completion of an abbreviated identifier must satisfy the filter. Every group supplied by the filter must also be supplied by the identifier with the same value. Coverage is directional: a broad pattern can cover a narrower one without the reverse being true.
@@ -117,6 +119,19 @@ fmt.Println(identifier.Covers(filter))   // true
 The missing F group remains unknown. It can be completed with 255, allowing overlap, but other completions do not satisfy the filter. Explicit zero and 255 are constraints, not omissions or wildcards.
 
 Both methods return false if either pattern is invalid, including the zero `Pattern`. These relations use numeric groups and presence flags; they do not resolve protocol-specific defaults or verify assigned measurement meanings.
+
+Convert codes parsed from hexadecimal or binary representations to compare them with abbreviated decimal identifiers:
+
+```go
+code, err := xobis.ParseHex("0100010800ff")
+if err != nil {
+    return err
+}
+complete := code.Pattern()
+fmt.Println(complete)                    // 1-0:1.8.0*255
+fmt.Println(identifier.Covers(complete)) // true
+fmt.Println(complete.Covers(identifier)) // false
+```
 
 ## Formatting and zero values
 

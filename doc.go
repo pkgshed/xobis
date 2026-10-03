@@ -10,6 +10,7 @@
 // [ParseHex], [FromUint64] and [FromBytes] accept hexadecimal text, packed integers and
 // raw bytes in A through F order. [ToHex], [ToUint64] and [ToBytes] convert valid [Code]
 // values back to those representations without errors.
+// [Code.Pattern] converts a code to a pattern with all six groups present.
 // [Pattern.Covers] compares whether one pattern accepts every completion of another;
 // [Pattern.Overlaps] checks whether any complete code satisfies both patterns.
 //

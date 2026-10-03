@@ -21,6 +21,13 @@ func NewCode(groups Groups) (Code, error) {
 // Edit the copy and call [NewCode] to construct a different code.
 func (c Code) Groups() Groups { return c.groups }
 
+// Pattern returns an immutable [Pattern] with all six groups present.
+// Every value remains an explicit constraint, including zero and 255.
+// The zero [Code] becomes the valid, complete pattern 0-0:0.0.0*0.
+func (c Code) Pattern() Pattern {
+	return Pattern{groups: c.groups, present: allPresent}
+}
+
 // Validate checks numeric ranges. Every [Code] produced by the public API,
 // including the zero value, is valid. It does not check assigned meanings.
 func (c Code) Validate() error { return c.groups.Validate() }
