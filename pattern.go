@@ -77,12 +77,38 @@ func (p Pattern) Match(c Code) bool {
 	if p.Validate() != nil {
 		return false
 	}
-	return (!p.present.PresentA() || p.groups.A == c.groups.A) &&
-		(!p.present.PresentB() || p.groups.B == c.groups.B) &&
-		(!p.present.PresentC() || p.groups.C == c.groups.C) &&
-		(!p.present.PresentD() || p.groups.D == c.groups.D) &&
-		(!p.present.PresentE() || p.groups.E == c.groups.E) &&
-		(!p.present.PresentF() || p.groups.F == c.groups.F)
+	return groupsAgree(p.groups, c.groups, p.present)
+}
+
+// Covers reports whether every complete [Code] matched by other is also matched
+// by p. Every group supplied by p must also be supplied by other with the same
+// value. The relation is directional; a broader pattern covers a narrower one.
+// It returns false if either pattern is invalid, including the zero [Pattern].
+func (p Pattern) Covers(other Pattern) bool {
+	if p.Validate() != nil || other.Validate() != nil {
+		return false
+	}
+	return p.present&^other.present == 0 && groupsAgree(p.groups, other.groups, p.present)
+}
+
+// Overlaps reports whether at least one complete [Code] matches both patterns.
+// Groups supplied by both patterns must agree; omitted groups remain unconstrained.
+// The relation is symmetric and does not establish equality or channel identity.
+// It returns false if either pattern is invalid, including the zero [Pattern].
+func (p Pattern) Overlaps(other Pattern) bool {
+	if p.Validate() != nil || other.Validate() != nil {
+		return false
+	}
+	return groupsAgree(p.groups, other.groups, p.present&other.present)
+}
+
+func groupsAgree(a, b Groups, present Presence) bool {
+	return (!present.PresentA() || a.A == b.A) &&
+		(!present.PresentB() || a.B == b.B) &&
+		(!present.PresentC() || a.C == b.C) &&
+		(!present.PresentD() || a.D == b.D) &&
+		(!present.PresentE() || a.E == b.E) &&
+		(!present.PresentF() || a.F == b.F)
 }
 
 // String formats present groups using OBIS separators without leading zeroes.
