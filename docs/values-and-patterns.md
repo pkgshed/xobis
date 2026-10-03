@@ -50,8 +50,8 @@ fmt.Println(changed) // 1-0:1.8.1*255
 
 The following electricity quantity constants identify signed net active power, defined as import minus export:
 
-| Quantity constant            | Group C | Scope      |
-|------------------------------|---------|------------|
+| Quantity constant             | Group C | Scope      |
+|-------------------------------|---------|------------|
 | `ElectricityActivePowerNet`   | 16      | All phases |
 | `ElectricityL1ActivePowerNet` | 36      | L1         |
 | `ElectricityL2ActivePowerNet` | 56      | L2         |
@@ -60,6 +60,43 @@ The following electricity quantity constants identify signed net active power, d
 These definitions come from [DLMS UA Blue Book edition 7, Table 9](https://www.cs.ru.nl/~marko/onderwijs/bss/SmartMeter/Excerpt_BB7.pdf#page=48). Group D selects the processing: `ElectricityInstantaneous` (7) gives instantaneous power; `ElectricityTimeIntegral1` (8) gives an energy integral. For example, `1-0:36.7.0*255` identifies L1 net active power, while `1-0:36.8.0*255` identifies its time integral.
 
 Quantity constants describe group C for electricity objects. They do not assign units, convert readings, or verify device support.
+
+### Electricity phase blocks
+
+Use `ElectricalQuantityFor(phase, base)` to derive a phase-specific group C quantity. The typed `Phase` selectors are `Aggregate` (0), `L1` (1), `L2` (2) and `L3` (3). The helper uses `base + phase*20` for the electricity measurement family with base C values 1..20, as defined in [DLMS UA Blue Book edition 7, Table 9](https://www.cs.ru.nl/~marko/onderwijs/bss/SmartMeter/Excerpt_BB7.pdf#page=48).
+
+| Base quantity               | Aggregate | L1 | L2 | L3 |
+|-----------------------------|-----------|----|----|----|
+| `ElectricityCurrent`        | 11        | 31 | 51 | 71 |
+| `ElectricityVoltage`        | 12        | 32 | 52 | 72 |
+| `ElectricityActivePowerNet` | 16        | 36 | 56 | 76 |
+
+`Aggregate` selects the unshifted base block. Its physical meaning depends on the quantity: net active power is the total across phases, whereas the base current and voltage codes describe any phase. It does not instruct the library to sum measurements.
+
+```go
+quantity, err := xobis.ElectricalQuantityFor(xobis.L3, xobis.ElectricityActivePowerNet)
+if err != nil {
+    return err
+}
+code, err := xobis.NewCode(xobis.Groups{
+    A: xobis.MediumElectricity,
+    B: xobis.ChannelUnspecified,
+    C: quantity,
+    D: xobis.ElectricityInstantaneous,
+    E: xobis.ElectricityTariffTotal,
+    F: xobis.StorageNotUsed,
+})
+if err != nil {
+    return err
+}
+fmt.Println(code) // 1-0:76.7.0*255
+```
+
+Electricity remains the medium in group A. The phase selects a block within C, independently of the channel in B. Signed net active power keeps its import-minus-export meaning for the base and each phase.
+
+The helper returns zero and an error wrapping `ErrRange` for phases outside 0..3 or base quantities outside 1..20. Already phase-specific quantities, neutral-current codes, service objects and manufacturer-specific quantities are outside this family, even when `Aggregate` is selected. The helper is specific to electricity and accepts no medium argument; other media require their own definitions.
+
+Existing constants such as `ElectricityL1Current` and `ElectricityL3ActivePowerNet` retain their names, `Quantity` type and numeric values. Their definitions use compile-time expressions based on the base quantity and phase offset.
 
 ## Parsing and matching
 

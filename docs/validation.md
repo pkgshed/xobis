@@ -9,6 +9,8 @@ Identifier validation checks syntax, required groups, and numeric ranges: A is 0
 
 Errors wrap `ErrSyntax` for malformed input or missing required groups, and `ErrRange` for values outside the allowed ranges. Use `errors.Is(err, xobis.ErrSyntax)` or `errors.Is(err, xobis.ErrRange)` to distinguish them. Parsers and constructors return zero values on failure.
 
+[`ElectricalQuantityFor`](values-and-patterns.md#electricity-phase-blocks) is scoped to the electricity measurement family: base group C values 1..20 and phase selectors 0..3. Invalid inputs return zero and wrap `ErrRange`. This helper's restrictions do not change the numeric ranges accepted by the general identifier parsers and constructors.
+
 String parsers return `*ParseError`, which records the original input and a zero-based byte offset. Cursor parsers return `*CursorError` with an absolute offset and a wrapped syntax, range or I/O error. See [parser composition](cursors.md#errors-and-recovery) for streaming errors and recovery.
 
 Validation accepts reserved and manufacturer-specific identifiers within range. It does not establish that an identifier is assigned, supported by a device, or compatible with a reading's unit. The library does not implement full OBIS display notation, meter protocols, or measurement arithmetic.

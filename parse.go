@@ -8,8 +8,9 @@ import (
 var (
 	// ErrSyntax indicates malformed input, invalid presence flags or missing required groups.
 	ErrSyntax = errors.New("invalid OBIS syntax")
-	// ErrRange indicates a value outside its group's range, a packed code
-	// exceeding 48 bits, or a negative initial cursor offset.
+	// ErrRange indicates a value outside its supported range: an OBIS group,
+	// electricity phase or base quantity, a packed code exceeding 48 bits,
+	// or a negative initial cursor offset.
 	ErrRange = errors.New("OBIS value out of range")
 )
 

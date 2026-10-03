@@ -79,18 +79,21 @@ const (
 	// ElectricityActivePowerNet is signed active power across all phases,
 	// defined as import minus export.
 	ElectricityActivePowerNet Quantity = 16
-	ElectricityL1Current      Quantity = 31
-	ElectricityL1Voltage      Quantity = 32
+
+	ElectricityL1Current Quantity = ElectricityCurrent + Quantity(L1)*electricalPhaseOffset
+	ElectricityL1Voltage Quantity = ElectricityVoltage + Quantity(L1)*electricalPhaseOffset
 	// ElectricityL1ActivePowerNet is signed L1 active power, import minus export.
-	ElectricityL1ActivePowerNet Quantity = 36
-	ElectricityL2Current        Quantity = 51
-	ElectricityL2Voltage        Quantity = 52
+	ElectricityL1ActivePowerNet Quantity = ElectricityActivePowerNet + Quantity(L1)*electricalPhaseOffset
+
+	ElectricityL2Current Quantity = ElectricityCurrent + Quantity(L2)*electricalPhaseOffset
+	ElectricityL2Voltage Quantity = ElectricityVoltage + Quantity(L2)*electricalPhaseOffset
 	// ElectricityL2ActivePowerNet is signed L2 active power, import minus export.
-	ElectricityL2ActivePowerNet Quantity = 56
-	ElectricityL3Current        Quantity = 71
-	ElectricityL3Voltage        Quantity = 72
+	ElectricityL2ActivePowerNet Quantity = ElectricityActivePowerNet + Quantity(L2)*electricalPhaseOffset
+
+	ElectricityL3Current Quantity = ElectricityCurrent + Quantity(L3)*electricalPhaseOffset
+	ElectricityL3Voltage Quantity = ElectricityVoltage + Quantity(L3)*electricalPhaseOffset
 	// ElectricityL3ActivePowerNet is signed L3 active power, import minus export.
-	ElectricityL3ActivePowerNet Quantity = 76
+	ElectricityL3ActivePowerNet Quantity = ElectricityActivePowerNet + Quantity(L3)*electricalPhaseOffset
 )
 
 // Processing identifies the processing or classification in group D.

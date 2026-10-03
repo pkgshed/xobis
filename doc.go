@@ -5,6 +5,9 @@
 // return copies; [Pattern.Groups] also returns presence flags to distinguish
 // omission from explicit zero.
 //
+// [ElectricalQuantityFor] derives electricity measurement quantities in group C
+// from a base quantity and a [Phase]. Group A remains [MediumElectricity].
+//
 // [Parse] accepts complete identifiers in A-B:C.D.E*F or A.B.C.D.E.F notation.
 // [ParsePattern] also accepts shortened identifiers without inventing defaults.
 // [ParseHex], [FromUint64] and [FromBytes] accept hexadecimal text, packed integers and
